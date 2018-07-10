@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: mysql-master
+  labels:
+    name: mysql-master
+spec:
+  replicas: 1
+  selector:
+    name: mysql-master
+  template:
+    metadata:
+      labels:
+        name: mysql-master
+    spec:
+      containers:
+      - name: master
+        image: liuxijie/mysql-master:0.1
+        ports:
+        - containerPort: 3306
+          hostPort: 50623
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "Zhaolijuan@1206"
+        - name: MYSQL_REPLICATION_USER
+          value: "sync"
+        - name: MYSQL_PASSWORD
+          value: "Zhaolijuan@1206"
+        volumeMounts: 
+            - name: mysql-master-storage 
+              mountPath: /var/lib/mysql 
+      volumes: 
+        - name: mysql-master-storage 
+          hostPath: 
+            path: /opt/volume/mysql/master/data

@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: mysql-slave
+  labels:
+    name: mysql-slave
+spec:
+  replicas: 1
+  selector:
+    name: mysql-slave
+  template:
+    metadata:
+      labels:
+        name: mysql-slave
+    spec:
+      containers:
+      - name: master
+        image: liuxijie/mysql-slave:0.1
+        ports:
+        - containerPort: 3306
+          hostPort: 50624
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "Zhaolijuan@1206"
+        - name: MYSQL_REPLICATION_USER
+          value: "sync"
+        - name: MYSQL_PASSWORD
+          value: "Zhaolijuan@1206"
+        volumeMounts: 
+            - name: mysql-slave-storage 
+              mountPath: /var/lib/mysql 
+      volumes: 
+        - name: mysql-slave-storage 
+          hostPath: 
+            path: /opt/volume/mysql/slave/data
